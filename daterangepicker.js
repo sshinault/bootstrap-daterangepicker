@@ -45,8 +45,6 @@
 
         //create the picker HTML object
         var DRPTemplate = '<div class="daterangepicker dropdown-menu">' +
-                '<div class="calendar first left"></div>' +
-                '<div class="calendar second right"></div>' +
                 '<div class="ranges">' +
                   '<div class="range_inputs">' +
                     '<div class="daterangepicker_start_input">' +
@@ -58,9 +56,11 @@
                       '<input class="input-mini" type="text" name="daterangepicker_end" value="" />' +
                     '</div>' +
                     '<button class="applyBtn" disabled="disabled" type="button"></button>&nbsp;' +
-                    '<button class="cancelBtn" type="button"></button>' +
+                    '<button class="cancelBtn pull-right" type="button"></button>' +
                   '</div>' +
                 '</div>' +
+                '<div class="calendar first left"></div>' +
+                '<div class="calendar second right"></div>' +
               '</div>';
 
         //custom options
@@ -133,7 +133,7 @@
             this.singleDatePicker = false;
             this.ranges = {};
 
-            this.opens = 'right';
+            this.opens = 'left';
             if (this.element.hasClass('pull-right'))
                 this.opens = 'left';
 
@@ -154,7 +154,7 @@
                 fromLabel: 'From',
                 toLabel: 'To',
                 weekLabel: 'W',
-                customRangeLabel: 'Custom Range',
+                customRangeLabel: 'Custom',
                 daysOfWeek: moment.weekdaysMin(),
                 monthNames: moment.monthsShort(),
                 firstDay: moment.localeData()._week.dow
@@ -630,6 +630,8 @@
         show: function (e) {
             if (this.isShowing) return;
 
+            this.hideCalendars();
+
             this.element.addClass('active');
             this.container.show();
             this.move();
@@ -770,17 +772,13 @@
 
                 this.leftCalendar.month.month(this.startDate.month()).year(this.startDate.year()).hour(this.startDate.hour()).minute(this.startDate.minute());
                 this.rightCalendar.month.month(this.endDate.month()).year(this.endDate.year()).hour(this.endDate.hour()).minute(this.endDate.minute());
+
+                this.updateView();
                 this.updateCalendars();
-
-                this.updateInputText();
-
-                this.hideCalendars();
                 this.hide();
-                this.element.trigger('apply.daterangepicker', this);
 
-                if (this.autoApply) {
-                    this.notify();
-                }
+                this.notify();
+                this.element.trigger('apply.daterangepicker', this);
 
             }
         },
